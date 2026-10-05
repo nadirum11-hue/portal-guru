@@ -13,18 +13,12 @@
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>Portal Guru</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0f172a}body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}#app{position:fixed;inset:0;width:100%;height:100dvh;height:100svh;background:#0f172a}#portal{position:absolute;inset:0;width:100%;height:100%;border:0;background:#f8fafc;display:block}.boot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;width:min(88vw,360px);padding:24px;border-radius:24px;background:rgba(15,23,42,.94);color:white;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.35);transition:opacity .25s ease,visibility .25s ease}.boot.hide{opacity:0;visibility:hidden;pointer-events:none}.logo{width:64px;height:64px;margin:0 auto 14px;border-radius:18px;box-shadow:0 12px 35px rgba(0,0,0,.25)}.spinner{width:28px;height:28px;margin:14px auto 0;border:3px solid rgba(255,255,255,.2);border-top-color:#60a5fa;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.boot h1{font-size:20px;margin:0;font-weight:900}.boot p{font-size:12px;margin:6px 0 0;color:#cbd5e1}.exit-shield{display:none;position:absolute;inset:0;z-index:20;background:rgba(2,6,23,.58);backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:20px}.exit-card{width:min(92vw,360px);padding:24px;border-radius:24px;background:#fff;color:#0f172a;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.35)}.exit-card h2{margin:0 0 8px;font-size:20px;font-weight:900}.exit-card p{margin:0 0 18px;color:#64748b;font-size:13px}.exit-actions{display:flex;gap:10px}.exit-actions button{flex:1;border:0;border-radius:12px;padding:11px 12px;font-weight:800}.exit-cancel{background:#e2e8f0;color:#334155}.exit-ok{background:#dc2626;color:#fff}.fallback{display:none;position:absolute;left:12px;right:12px;bottom:14px;z-index:6;padding:10px 14px;border-radius:14px;background:rgba(127,29,29,.95);color:#fff;text-align:center;font-size:12px}.fallback button{margin-top:7px;border:0;border-radius:9px;padding:7px 12px;font-weight:800}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0f172a}body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}#app{position:fixed;inset:0;width:100%;height:100dvh;height:100svh;background:#0f172a}#portal{position:absolute;inset:0;width:100%;height:100%;border:0;background:#f8fafc;display:block}.exit-shield{display:none;position:absolute;inset:0;z-index:20;background:rgba(2,6,23,.58);backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:20px}.exit-card{width:min(92vw,360px);padding:24px;border-radius:24px;background:#fff;color:#0f172a;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.35)}.exit-card h2{margin:0 0 8px;font-size:20px;font-weight:900}.exit-card p{margin:0 0 18px;color:#64748b;font-size:13px}.exit-actions{display:flex;gap:10px}.exit-actions button{flex:1;border:0;border-radius:12px;padding:11px 12px;font-weight:800}.exit-cancel{background:#e2e8f0;color:#334155}.exit-ok{background:#dc2626;color:#fff}.fallback{display:none;position:absolute;left:12px;right:12px;bottom:14px;z-index:6;padding:10px 14px;border-radius:14px;background:rgba(127,29,29,.95);color:#fff;text-align:center;font-size:12px}.fallback button{margin-top:7px;border:0;border-radius:9px;padding:7px 12px;font-weight:800}
 </style>
 </head>
 <body>
 <div id="app">
   <iframe id="portal" title="Portal Guru" allow="fullscreen; clipboard-read; clipboard-write"></iframe>
-  <div id="boot" class="boot">
-    <img class="logo" src="./icon-192.png" alt="Portal Guru">
-    <h1>PORTAL GURU</h1>
-    <p>Menghubungkan ke Teacher Command Center…</p>
-    <div class="spinner"></div>
-  </div>
   <div id="exitShield" class="exit-shield" aria-hidden="true">
     <div class="exit-card">
       <h2>Keluar dari Portal Guru?</h2>
@@ -40,14 +34,11 @@
 <script>
 const PORTAL_URL='https://script.google.com/macros/s/AKfycbx-hiYq6ms1E5_66HQVvFmHd7cYyTukONcWw9llO9F9flW3Q52AeH0snmZR1_s-jdMO/exec?app=guru';
 const iframe=document.getElementById('portal');
-const boot=document.getElementById('boot');
 const fallback=document.getElementById('fallback');
 const exitShield=document.getElementById('exitShield');
 const exitCancel=document.getElementById('exitCancel');
 const exitOk=document.getElementById('exitOk');
-let loaded=false;
 let allowExit=false;
-function finishBoot(){if(loaded)return;loaded=true;boot.classList.add('hide');setTimeout(()=>{boot.remove()},350)}
 function showExitConfirm(){
   exitShield.style.display='flex';
   exitShield.setAttribute('aria-hidden','false');
@@ -77,11 +68,7 @@ iframe.addEventListener('message',function(event){
     history.back();
   }
 });
-iframe.addEventListener('load',finishBoot,{once:true});
 iframe.src=PORTAL_URL;
-// Jangan pernah membuat layar terkunci selamanya. Jika load event terlambat di mobile,
-// iframe tetap dibiarkan tampil dan splash dilepas otomatis.
-setTimeout(finishBoot,7000);
 setTimeout(()=>{if(!loaded)fallback.style.display='block'},12000);
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));}
 </script>
